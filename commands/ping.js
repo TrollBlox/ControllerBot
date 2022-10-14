@@ -7,4 +7,4 @@ module.exports = {
   async execute(int) {
     int.reply("Pong!");
   }
-}
+};
