@@ -1,5 +1,5 @@
 const { ButtonBuilder, ButtonStyle, ActionRowBuilder, EmbedBuilder, Colors } = require('discord.js');
-const { ticketsChannel } = require('../config.json');
+const { ticketsChannelId, ticketsMessageId } = require('../config.json');
 
 module.exports = {
   name: 'createticket',
@@ -15,12 +15,9 @@ module.exports = {
       .setDescription('Do you have a question? Need some help? Create a ticket below :)')
       .setColor(Colors.Blurple);
 
-    const channel = await client.channels.fetch(ticketsChannel);
-
-    await channel.messages.fetch({ limit: 100 }).then(messages => {
-      messages.forEach(async message => await message.delete());
-    });
-    
-    channel.send({ embeds: [ embed ], components: [ row ] });
+    const channel = await client.channels.cache.get(ticketsChannelId);
+    const message = await channel.messages.fetch(ticketsMessageId);
+  
+    return await message.edit({ embeds: [ embed ], components: [ row ] });
   }
 }

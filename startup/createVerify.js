@@ -1,5 +1,5 @@
 const { ButtonBuilder, ButtonStyle, ActionRowBuilder, EmbedBuilder, Colors } = require('discord.js');
-const { verifyChannel } = require('../config.json');
+const { verifyChannelId, verifyMessageId } = require('../config.json');
 
 module.exports = {
   name: 'createverify',
@@ -15,12 +15,9 @@ module.exports = {
       .setDescription('Click the button below to verify in the server :)')
       .setColor(Colors.Blurple);
 
-    const channel = await client.channels.fetch(verifyChannel);
-
-    await channel.messages.fetch({ limit: 100 }).then(messages => {
-      messages.forEach(async message => await message.delete());
-    });
-    
-    channel.send({ embeds: [ embed ], components: [ row ] });
+    const channel = await client.channels.cache.get(verifyChannelId);
+    const message = await channel.messages.fetch(verifyMessageId);
+  
+    return await message.edit({ embeds: [ embed ], components: [ row ] });
   }
 }
