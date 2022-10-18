@@ -16,13 +16,13 @@ module.exports = {
       .setDescription(`Your ticket ${int.channel.name} in ${int.guild.name} was closed for ${reason}!`)
 
     await user.createDM();
-    await user.send({ embeds: [ embed ] });
+    await user.send({ embeds: [ embed ] }).catch(console.error);
 
     const assigneeId = await func.getAssignee(int.channel.id);
     if (assigneeId != -1) {
       const assignee = await int.client.users.fetch(assigneeId);
       await assignee.createDM();
-      await assignee.send({ embeds: [ embed.setDescription(`The ticket ${int.channel.name} in ${int.guild.name} was closed for ${reason}!`)]});
+      await assignee.send({ embeds: [ embed.setDescription(`The ticket ${int.channel.name} in ${int.guild.name} was closed for ${reason}!`)]}).catch(console.error);
     }
     await int.reply('Done.')
     return await int.channel.delete();

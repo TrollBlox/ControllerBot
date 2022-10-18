@@ -3,8 +3,9 @@ module.exports = {
   async execute(int) {
     if (int.user == int.client.user) return;
     if (int.isButton()) {
-      if (int.customId == 'gold' || int.customId == 'green' || int.customId == 'blue' || int.customId == 'purple' || int.customId == 'pink' || int.customId == 'remove') {
+      if (int.customId == 'gold' || int.customId == 'green' || int.customId == 'blue' || int.customId == 'purple' || int.customId == 'pink' || int.customId == 'remove' || int.customId == 'male' || int.customId == 'female' || int.customId == 'other') {
         const colors = require('../buttons/colors.js');
+        const gender = require('../buttons/gender.js');
         switch (int.customId) {
           case 'gold':
             colors.gold(int);
@@ -23,6 +24,15 @@ module.exports = {
             break;
           case 'remove':
             colors.remove(int);
+            break;
+          case 'male':
+            gender.male(int);
+            break;
+          case 'female':
+            gender.female(int);
+            break;
+          case 'other':
+            gender.other(int);
             break;
         }
         return;

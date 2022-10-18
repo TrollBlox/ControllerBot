@@ -12,8 +12,12 @@ module.exports = {
       .setCustomId('colors')
       .setLabel('Colors')
       .setStyle(ButtonStyle.Secondary);
+    const gender = new ButtonBuilder()
+      .setCustomId('gender')
+      .setLabel('Gender')
+      .setStyle(ButtonStyle.Secondary);
     const row = new ActionRowBuilder()
-      .addComponents(rules, roles);
+      .addComponents(rules, roles, gender);
     const embed = new EmbedBuilder()
       .setTitle('Welcome!')
       .setDescription('Things to do around here:\n\nRead the rules\n\nGet roles')
