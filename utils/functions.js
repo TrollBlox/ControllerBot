@@ -28,7 +28,7 @@ module.exports = {
 
 		if (ticketss) {
 			ticketss.tickets += 1;
-			ticketss.save();
+			await ticketss.save();
 		} else {
 		  ticketCount.create({ guild_id: guild_id, tickets: 1 });
       ticketss = await ticketCount.findOne({
@@ -42,9 +42,47 @@ module.exports = {
     let user = await tickets.findOne({
       where: { opener_id: user_id, closed: false }
     });
-    console.log(user == null);
-    console.log(user)
     return (user);
+  },
+
+  closeTicket: async function(channel_id, reason) {
+    let tick = await tickets.findOne({
+      where: { channel_id: channel_id }
+    });
+    if (tick) {
+      tick.closed = true;
+      tick.reason = reason;
+      await tick.save();
+    }
+  },
+
+  getOpener: async function(channel_id) {
+    let tick = await tickets.findOne({
+      where: { channel_id: channel_id }
+    });
+    if (tick) {
+      return tick.opener_id;
+    }
+  },
+
+  getAssignee: async function(channel_id) {
+    let tick = await tickets.findOne({
+      where: { channel_id: channel_id }
+    });
+    if (tick) {
+      return tick.assignee_id;
+    }
+    return -1;
+  },
+
+  setAssignee: async function(channel_id, assignee_id) {
+    let tick = await tickets.findOne({
+      where: { channel_id: channel_id }
+    });
+    if (tick) {
+      tick.assignee_id = assignee_id;
+      await tick.save();
+    }
   }
 
 }

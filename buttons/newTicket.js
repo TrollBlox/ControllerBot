@@ -3,25 +3,19 @@ const { memberRoleId } = require('../config.json');
 
 module.exports = {
   id: 'createTicket',
+  close: new ButtonBuilder()
+    .setCustomId('closeticket')
+    .setLabel('Close')
+    .setStyle(ButtonStyle.Danger),
+  assign: new ButtonBuilder()
+    .setCustomId('assignself')
+    .setLabel('Assign Yourself')
+    .setStyle(ButtonStyle.Primary),
   async execute(int) {
     const func = require('../utils/functions');
     if (await func.userHasTicket(int.user.id) !== null) {
       return await int.reply({ content: `You already have a ticket!`, ephemeral: true });
     }
-    const close = new ButtonBuilder()
-      .setCustomId('closeticket')
-      .setLabel('Close')
-      .setStyle(ButtonStyle.Danger);
-    const closereason = new ButtonBuilder()
-      .setCustomId('closereason')
-      .setLabel('Close With Reason')
-      .setStyle(ButtonStyle.Danger);
-    const assign = new ButtonBuilder()
-      .setCustomId('assignself')
-      .setLabel('Assign Yourself')
-      .setStyle(ButtonStyle.Primary);
-    const row = new ActionRowBuilder()
-      .addComponents(close, closereason, assign);
     const embed = new EmbedBuilder() 
       .setTitle('Support Ticket')
       .setDescription('This is the support ticket!')
@@ -41,6 +35,9 @@ module.exports = {
         ],
       reason: 'new ticket'
     });
+
+    const row = new ActionRowBuilder()
+      .addComponents(this.close, this.assign);
 
     await func.newTicket(int, channel.id);
 

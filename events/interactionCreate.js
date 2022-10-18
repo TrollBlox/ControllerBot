@@ -37,6 +37,17 @@ module.exports = {
       }
     }
 
+    if (int.isModalSubmit()) {
+      const modal = int.client.modals.get(int.customId);
+
+      try {
+        return await modal.execute(int);
+      } catch (error) {
+        console.error(error);
+        return await int.reply({ content: 'There was an error while executing this modal!', ephemeral: true });
+      }
+    }
+
     if (int.isCommand()) {
       const command = int.client.commands.get(int.commandName);
 
