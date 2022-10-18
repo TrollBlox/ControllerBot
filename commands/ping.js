@@ -5,6 +5,6 @@ module.exports = {
   .setName("ping")
   .setDescription("Replies with Pong!"),
   async execute(int) {
-    int.reply("Pong!");
+    int.reply(`The bot's ping is ${int.client.ws.ping}ms!`);
   }
 };

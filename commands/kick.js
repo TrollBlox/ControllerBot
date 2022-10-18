@@ -24,12 +24,12 @@ module.exports = {
         return await int.reply({ embeds: [embed] });
       }
 
-      if (int.member.roles.highest < await int.guild.members.cache.get(user.id).roles.highest || user == int.client.user) {
+      if (await int.member.roles.highest >= await int.guild.members.cache.get(user.id).roles.highest || user == int.client.user) {
         embed.setDescription(`You cannot kick <@${user.id}>!`);
         return await int.reply({ embeds: [ embed ]});
       }
 
-      if (int.guild.ownerId == user.id) {
+      if (await int.guild.ownerId == user.id) {
         embed.setDescription('You cannot kick a server\'s owner!');
         await int.reply({ embeds: [ embed ] });
       }

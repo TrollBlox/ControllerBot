@@ -18,7 +18,7 @@ module.exports = {
       const embed = new EmbedBuilder();
       await embed.setColor(Colors.Blurple);
 
-      if (!(int.guild.members.fetch(int.author).permissions.has( [ PermissionsBitField.Flags.BanMembers ] ))) {
+      if (!(int.member.permissions.has(PermissionsBitField.Flags.BanMembers))) {
         await embed.setTitle('Error');
         await embed.setDescription(`You cannot ban members!`);
         return await int.reply({ embeds: [embed] });

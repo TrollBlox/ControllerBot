@@ -26,5 +26,6 @@ module.exports = {
     }
     await int.reply('Done.')
     return await int.channel.delete();
+    // TODO: Add transcripts to tickets!!!!!!!!!!!!
   }
 }

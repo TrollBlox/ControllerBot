@@ -8,8 +8,12 @@ module.exports = {
       .setCustomId('createverify')
       .setLabel('Click Me to Verify!')
       .setStyle(ButtonStyle.Success);
+    const rules = new ButtonBuilder()
+      .setCustomId('rules')
+      .setLabel('Click me to read the rules!')
+      .setStyle(ButtonStyle.Secondary);
     const row = new ActionRowBuilder()
-      .addComponents(ticket);
+      .addComponents(ticket, rules);
     const embed = new EmbedBuilder()
       .setTitle('Verify')
       .setDescription('Click the button below to verify in the server :)')

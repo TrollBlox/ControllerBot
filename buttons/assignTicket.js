@@ -7,7 +7,7 @@ module.exports = {
   execute: async function(int) {
     const func = require('../utils/functions.js');
     if (int.member.roles.highest.id == memberRoleId) {
-      return await int.reply({ content: `Only a server manager can assign themselves to a ticket!`});
+      return await int.reply({ content: `Only a server manager can assign themselves to a ticket!`, ephemeral: true });
     }
     await func.setAssignee(int.channel.id, int.user.id);
 
@@ -16,7 +16,7 @@ module.exports = {
 
     await int.message.edit({ components: [ row ] });
 
-    return await int.reply({ content: 'Successfully assigned you to this ticket!', ephemeral: true });
+    return await int.reply({ content: `<@${int.user.id}> assigned themselves to this ticket!` });
 
   }
 }
