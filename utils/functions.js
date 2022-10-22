@@ -18,7 +18,7 @@ module.exports = {
 
   newTicket: async function(int, newChannelId) {
     this.addTicket(int.guild.id);
-    tickets.create({ channel_id: newChannelId, ticket_number: await this.getTicketCount(int.guild.id) + 1, closed: false, opener_id: int.user.id, guild_id: int.guild.id, })
+    tickets.create({ channel_id: newChannelId, ticket_number: await this.getTicketCount(int.guild.id) + 1, closed: false, opener_id: int.user.id, guild_id: int.guild.id, open_time: Date.now() })
   },
 
   addTicket: async function(guild_id) {
@@ -45,13 +45,15 @@ module.exports = {
     return (user);
   },
 
-  closeTicket: async function(channel_id, reason) {
+  closeTicket: async function(channel_id, reason, closer) {
     let tick = await tickets.findOne({
       where: { channel_id: channel_id }
     });
     if (tick) {
       tick.closed = true;
+      tick.close_time = Date.now();
       tick.reason = reason;
+      tick.closer = closer;
       await tick.save();
     }
   },
@@ -81,7 +83,62 @@ module.exports = {
     });
     if (tick) {
       tick.assignee_id = assignee_id;
+      tick.assigned_at = Date.now();
       await tick.save();
+    }
+  },
+
+  getOpenTime: async function(channel_id) {
+    let tick = await tickets.findOne({
+      where: { channel_id: channel_id }
+    });
+    if (tick) {
+      return await tick.open_time;
+    }
+  },
+
+  getCloseTime: async function(channel_id) {
+    let tick = await tickets.findOne({
+      where: { channel_id: channel_id }
+    });
+    if (tick) {
+      return await tick.close_time;
+    }
+  },
+
+  getCloser: async function(channel_id) {
+    let tick = await tickets.findOne({
+      where: { channel_id: channel_id }
+    });
+    if (tick) {
+      return await tick.closer;
+    }
+  },
+
+  getReason: async function(channel_id) {
+    let tick = await tickets.findOne({
+      where: { channel_id: channel_id }
+    });
+    if (tick) {
+      return await tick.reason;
+    }
+  },
+
+  getAssignedAt: async function(channel_id) {
+    let tick = await tickets.findOne({
+      where: { channel_id: channel_id }
+    });
+    if (tick) {
+      return await tick.assigned_at;
+    }
+  },
+
+  getTicketNumber: async function(channel_id) {
+    let tick = await tickets.findOne({
+      where: { channel_id: channel_id }
+    });
+    if (tick) {
+      return await tick.ticket_number;
     }
   }
 

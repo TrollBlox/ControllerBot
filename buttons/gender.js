@@ -1,4 +1,4 @@
-const { ButtonBuilder, ActionRowBuilder, EmbedBuilder, ButtonStyle } = require('discord.js');
+const { ButtonBuilder, ActionRowBuilder, EmbedBuilder, ButtonStyle, Colors } = require('discord.js');
 const { maleRoleId, femaleRoleId, otherRoleId } = require('../config.json');
 
 module.exports = {
@@ -6,7 +6,8 @@ module.exports = {
   async execute(int) {
     const embed = new EmbedBuilder()
       .setTitle('Gender')
-      .setDescription('Set your gender');
+      .setDescription('Set your gender')
+      .setColor(Colors.Blurple);
     const male = new ButtonBuilder()
       .setCustomId('male')
       .setLabel('Male')
@@ -19,48 +20,73 @@ module.exports = {
       .setCustomId('other')
       .setLabel('Other')
       .setStyle(ButtonStyle.Primary);
+    const remove = new ButtonBuilder()
+      .setCustomId('remove')
+      .setLabel('Remove')
+      .setStyle(ButtonStyle.Danger);
     const row = new ActionRowBuilder()
-      .setComponents(male, female, other);
+      .setComponents(male, female, other, remove);
 
-    return await int.reply({ embeds: [ embed ], ephemeral: true, components: [ row ] });
-  },
-  async male(int) {
-    const male = await int.guild.roles.fetch(maleRoleId);
-    const female = await int.guild.roles.fetch(femaleRoleId);
-    const other = await int.guild.roles.fetch(otherRoleId);
-    const member = int.member;
+    await int.reply({ embeds: [ embed ], ephemeral: true, components: [ row ] });
+    
+    const collector = int.channel.createMessageComponentCollector();
 
-    await member.roles.add(male, 'picked male');
-    await member.roles.remove(female, 'picked male');
-    await member.roles.remove(other, 'picked male');
+    collector.on('collect', async i => {
+      const male = await int.guild.roles.fetch(maleRoleId);
+      const female = await int.guild.roles.fetch(femaleRoleId);
+      const other = await int.guild.roles.fetch(otherRoleId);
+      const member = int.member;
+      const embed2 = new EmbedBuilder()
+        .setColor(Colors.Blurple);
+      const back = new ButtonBuilder()
+        .setCustomId('back')
+        .setLabel('Back')
+        .setStyle(ButtonStyle.Success);
+      const row2 = new ActionRowBuilder()
+        .addComponents(back);
+      switch (i.customId) {
+        case 'male':
+          await member.roles.add(male, 'picked male');
+          await member.roles.remove(female, 'picked male');
+          await member.roles.remove(other, 'picked male');
+          
+          embed2.setDescription('Set your gender to male!')
 
-    return await int.reply({ content: 'Set your gender to male!', ephemeral: true });
-  },
-  async female(int) {
-    const male = await int.guild.roles.fetch(maleRoleId);
-    const female = await int.guild.roles.fetch(femaleRoleId);
-    const other = await int.guild.roles.fetch(otherRoleId);
-    const member = int.member;
+          await int.editReply({ components: [ row2 ], embeds: [ embed2 ] });
+          break;
+        case 'female':
+          await member.roles.remove(male, 'picked female');
+          await member.roles.add(female, 'picked female');
+          await member.roles.remove(other, 'picked female');
+          
+          embed2.setDescription('Set your gender to female!');
 
-    await member.roles.remove(male, 'picked female');
-    await member.roles.add(female, 'picked female');
-    await member.roles.remove(other, 'picked female');
+          await int.editReply({ components: [ row2 ], embeds: [ embed2 ] });
+          break;
+        case 'other':
+          await member.roles.remove(male, 'picked other');
+          await member.roles.remove(female, 'picked other');
+          await member.roles.add(other, 'picked other');
 
-    return await int.reply({ content: 'Set your gender to female!', ephemeral: true });
+          embed2.setDescription('Set your gender to other!');
 
-  },
-  async other(int) {
-    const male = await int.guild.roles.fetch(maleRoleId);
-    const female = await int.guild.roles.fetch(femaleRoleId);
-    const other = await int.guild.roles.fetch(otherRoleId);
-    const member = int.member;
+          await int.editReply({ components: [ row2 ], embeds: [ embed2 ] });
+          break;
+        case 'remove':
+          await member.roles.remove(male, 'picked remove');
+          await member.roles.remove(female, 'picked remove');
+          await member.roles.remove(other, 'picked remove');
 
-    await member.roles.remove(male, 'picked other');
-    await member.roles.remove(female, 'picked other');
-    await member.roles.add(other, 'picked other');
+          embed2.setDescription('Removed your gender!')
+            .setColor(Colors.Red);
 
-    return await int.reply({ content: 'Set your gender to other!', ephemeral: true });
-
+          await int.editReply({ components: [ row2 ], embeds: [ embed2 ] });
+          break;
+        case 'back':
+          await int.editReply({ components: [ row ], embeds: [ embed ]});
+          break;
+      }
+    });
   }
   
 }

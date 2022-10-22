@@ -1,4 +1,4 @@
-const { SlashCommandBuilder, EmbedBuilder, Colors, PermissionsBitField } = require('discord.js');
+const { SlashCommandBuilder, EmbedBuilder, Colors, PermissionsBitField, PermissionFlagsBits } = require('discord.js');
 
 module.exports = {
   data: new SlashCommandBuilder()
@@ -15,38 +15,41 @@ module.exports = {
     .addStringOption(option =>
       option.setName('reason')
       .setDescription('The reason for the timeout')
-      .setRequired(false)),
+      .setRequired(false))
+    .setDefaultMemberPermissions(PermissionFlagsBits.ModerateMembers)
+    .setDMPermission(false),
     async execute(int) {
       const user = await int.options.getUser('user');
-      const time = await int.options.getInt('length');
+      const time = await int.options.getInteger('length');
       const reason = await int.options.getString('reason') || 'No reason provided';
-      const embed = new EmbedBuilder();
-      await embed.setColor(Colors.Blurple);
+      const embed = new EmbedBuilder()
+        .setColor(Colors.Blurple);
 
-      if (!(int.guild.members.fetch(int.author).permissions.has( [ PermissionsBitField.Flags.BanMembers ] ))) {
-        await embed.setTitle('Error');
-        await embed.setDescription(`You cannot ban members!`);
-        return await int.reply({ embeds: [embed] });
+      if (int.user.id != int.guild.ownerId) {
+
+        if (await int.member.roles.highest >= await int.guild.members.cache.get(user.id).roles.highest || user == int.client.user) {
+          embed.setDescription(`You cannot timeout ${user.toString()}!`);
+          return await int.reply({ embeds: [embed] });
+        }
+
+        if (await int.guild.ownerId == user.id) {
+          embed.setDescription('You cannot timeout a server\'s owner!');
+          await int.reply({ embeds: [ embed ] });
+        }
       }
 
-      if (int.member.roles.highest.comparePositionTo(int.guild.members.cache.get(user.id).roles.highest) < 1) {
-        await embed.setTitle('Error');
-        await embed.setDescription(`You cannot ban <@${user.id}>!`);
-        return await int.reply({ embeds: [embed] });
-      }
+      // if (!int.guild.members.fetch(user).moderatable) {
+      //   embed.setDescription(`${user.toString()} is not able to be put in timeout by the bot!`);
+      //   return await int.reply({ embeds: [embed] });
+      // }
 
-      if (!int.guild.members.fetch(user).bannable) {
-        await embed.setTitle('Error');
-        await embed.setDescription(`<@${user.id}> is not bannable by the bot!`);
-        return await int.reply({ embeds: [embed] });
-      }
-
-      await embed.setTitle('Ban');
-      await embed.setDescription(`You have been banned from ${int.guild.name} for ${reason}!`);
+      embed.setTitle('Timeout');
+      embed.setDescription(`You have been put in timeout from ${int.guild.name} until <t${Date.now() + (time * 60 * 1000)}> for ${reason}!`);
       await user.createDM();
-      await user.send({ embeds: [ embed ] } );
-      await int.guild.members.fetch(user).ban({ reason: reason });
-      await embed.setDescription(`<@${user.id}> has been banned for ${reason}!`);
+      await user.send({ embeds: [ embed ] });
+      const member = await int.guild.members.fetch(user);
+      await member.timeout((time * 60 * 1000), reason);
+      embed.setDescription(`${user.toString()} has been put in timeout until <t:${Date.now() + (time * 60 * 1000)}> for ${reason}!`);
       return await int.reply({ embeds: [embed] });
 
     }

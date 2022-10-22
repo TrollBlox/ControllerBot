@@ -7,15 +7,16 @@ module.exports = {
     const rules = new ButtonBuilder()
       .setCustomId('rules')
       .setLabel('Rules')
-      .setStyle(ButtonStyle.Primary);
+      .setStyle(ButtonStyle.Success)
+      .setEmoji('1007191139696255017');
     const roles = new ButtonBuilder()
       .setCustomId('colors')
       .setLabel('Colors')
-      .setStyle(ButtonStyle.Secondary);
+      .setStyle(ButtonStyle.Primary);
     const gender = new ButtonBuilder()
       .setCustomId('gender')
       .setLabel('Gender')
-      .setStyle(ButtonStyle.Secondary);
+      .setStyle(ButtonStyle.Primary);
     const row = new ActionRowBuilder()
       .addComponents(rules, roles, gender);
     const embed = new EmbedBuilder()

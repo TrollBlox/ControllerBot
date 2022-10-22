@@ -13,8 +13,10 @@ module.exports = {
     .setStyle(ButtonStyle.Primary),
   async execute(int) {
     const func = require('../utils/functions');
+    const embed2 = new EmbedBuilder();
     if (await func.userHasTicket(int.user.id) !== null) {
-      return await int.reply({ content: `You already have a ticket!`, ephemeral: true });
+      embed2.setDescription('You already have a ticket!');
+      return await int.reply({ embeds: [ embed2 ], ephemeral: true });
     }
     const embed = new EmbedBuilder() 
       .setTitle('Support Ticket')
@@ -43,7 +45,10 @@ module.exports = {
 
     await channel.send({ embeds: [ embed ], components: [ row ] });
 
-    return await int.reply({ content: `Your ticket has been made. Proceed to <#${channel.id}> to get support!`, ephemeral: true });
+    embed2.setDescription(`Your ticket has been made. Proceed to <#${channel.id}> to get support!`)
+      .setColor(Colors.Blurple);
+
+    return await int.reply({ embeds: [ embed2 ], ephemeral: true });
     
   }
 }

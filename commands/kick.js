@@ -1,4 +1,4 @@
-const { SlashCommandBuilder, EmbedBuilder, Colors, PermissionsBitField } = require('discord.js');
+const { SlashCommandBuilder, EmbedBuilder, Colors, PermissionFlagsBits } = require('discord.js');
 
 module.exports = {
   data: new SlashCommandBuilder()
@@ -11,27 +11,31 @@ module.exports = {
     .addStringOption(option =>
       option.setName('reason')
       .setDescription('The reason for the kick')
-      .setRequired(false)),
+      .setRequired(false))
+    .setDefaultMemberPermissions(PermissionFlagsBits.KickMembers)
+    .setDMPermission(false),
     async execute(int) {
       const user = await int.options.getUser('user');
       const reason = await int.options.getString('reason') || 'No reason provided';
-      const embed = new EmbedBuilder();
-      embed.setColor(Colors.Blurple);
+      const embed = new EmbedBuilder()
+        .setColor(Colors.Blurple);
 
-      if (!await int.member.permissions.has([ PermissionsBitField.Flags.KickMembers ])) {
-        embed.setTitle('Error');
-        embed.setDescription(`You cannot kick members!`);
+      if (int.user.id != int.guild.ownerId) {
+
+        if (await int.member.roles.highest >= await int.guild.members.cache.get(user.id).roles.highest || user == int.client.user) {
+          embed.setDescription(`You cannot kick ${user.toString()}!`);
+          return await int.reply({ embeds: [ embed ]});
+        }
+
+        if (await int.guild.ownerId == user.id) {
+          embed.setDescription('You cannot kick a server\'s owner!');
+          await int.reply({ embeds: [ embed ] });
+        }
+      }
+      
+      if (!int.guild.members.fetch(user).kickable) {
+        embed.setDescription(`${user.toString()} is not able to be kicked by the bot!`);
         return await int.reply({ embeds: [embed] });
-      }
-
-      if (await int.member.roles.highest >= await int.guild.members.cache.get(user.id).roles.highest || user == int.client.user) {
-        embed.setDescription(`You cannot kick <@${user.id}>!`);
-        return await int.reply({ embeds: [ embed ]});
-      }
-
-      if (await int.guild.ownerId == user.id) {
-        embed.setDescription('You cannot kick a server\'s owner!');
-        await int.reply({ embeds: [ embed ] });
       }
 
       embed.setTitle('Kick');
@@ -40,7 +44,7 @@ module.exports = {
       await user.send({ embeds: [ embed ] } );
       const member = await int.guild.members.fetch(user);
       await member.kick(reason);
-      embed.setDescription(`<@${user.id}> has been kicked for ${reason}!`);
+      embed.setDescription(`${user.toString()} has been kicked for ${reason}!`);
       return await int.reply({ embeds: [embed] });
 
     }

@@ -21,6 +21,18 @@ module.exports = (sequelize, DataTypes) => {
     },
     guild_id: {
       type: DataTypes.STRING
+    },
+    open_time: {
+      type: DataTypes.STRING
+    },
+    close_time: {
+      type: DataTypes.STRING
+    },
+    closer: {
+      type: DataTypes.STRING
+    },
+    assigned_at: {
+      type: DataTypes.STRING
     }
   }, {
     timestamps: false,

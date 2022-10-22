@@ -6,7 +6,7 @@ module.exports = {
   async execute(client) {
     const ticket = new ButtonBuilder()
       .setCustomId('createverify')
-      .setLabel('Click Me to Verify!')
+      .setLabel('Click me to verify!')
       .setStyle(ButtonStyle.Success);
     const rules = new ButtonBuilder()
       .setCustomId('rules')

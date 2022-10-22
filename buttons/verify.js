@@ -6,7 +6,7 @@ module.exports = {
   async execute(int) {
     const embed = new EmbedBuilder()
       .setTitle('New Verified')
-      .setDescription(`<@${int.user.id}> just verified!`)
+      .setDescription(`${int.user.toString()} just verified!`)
       .setColor(Colors.Blurple);
 
     const role = await int.guild.roles.fetch(memberRoleId);

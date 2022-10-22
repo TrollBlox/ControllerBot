@@ -1,42 +1,14 @@
+const { skips } = require('../config.json');
+
 module.exports = {
   name: 'interactionCreate',
   async execute(int) {
     if (int.user == int.client.user) return;
+    if (skips.includes(int.customId)) {
+      await int.reply('stuff');
+      return await int.deleteReply();
+    }
     if (int.isButton()) {
-      if (int.customId == 'gold' || int.customId == 'green' || int.customId == 'blue' || int.customId == 'purple' || int.customId == 'pink' || int.customId == 'remove' || int.customId == 'male' || int.customId == 'female' || int.customId == 'other') {
-        const colors = require('../buttons/colors.js');
-        const gender = require('../buttons/gender.js');
-        switch (int.customId) {
-          case 'gold':
-            colors.gold(int);
-            break;
-          case 'green':
-            colors.green(int);
-            break;
-          case 'blue':
-            colors.blue(int);
-            break;
-          case 'purple':
-            colors.purple(int);
-            break;
-          case 'pink':
-            colors.pink(int);
-            break;
-          case 'remove':
-            colors.remove(int);
-            break;
-          case 'male':
-            gender.male(int);
-            break;
-          case 'female':
-            gender.female(int);
-            break;
-          case 'other':
-            gender.other(int);
-            break;
-        }
-        return;
-      }
       const button = int.client.buttons.get(int.customId);
 
       try {
