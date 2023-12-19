@@ -4,26 +4,6 @@ const { maleRoleId, femaleRoleId, otherRoleId } = require('../config.json');
 module.exports = {
   id: 'gender',
   async execute(int) {
-    const embed = new EmbedBuilder()
-      .setTitle('Gender')
-      .setDescription('Set your gender')
-      .setColor(Colors.Blurple);
-    const male = new ButtonBuilder()
-      .setCustomId('male')
-      .setLabel('Male')
-      .setStyle(ButtonStyle.Primary);
-    const female = new ButtonBuilder()
-      .setCustomId('female')
-      .setLabel('Female')
-      .setStyle(ButtonStyle.Primary);
-    const other = new ButtonBuilder()
-      .setCustomId('other')
-      .setLabel('Other')
-      .setStyle(ButtonStyle.Primary);
-    const remove = new ButtonBuilder()
-      .setCustomId('remove')
-      .setLabel('Remove')
-      .setStyle(ButtonStyle.Danger);
     const row = new ActionRowBuilder()
       .setComponents(male, female, other, remove);
 

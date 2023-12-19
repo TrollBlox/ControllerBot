@@ -38,13 +38,13 @@ module.exports = {
         }
       }
 
-      // if (!int.guild.members.fetch(user).moderatable) {
-      //   embed.setDescription(`${user.toString()} is not able to be put in timeout by the bot!`);
-      //   return await int.reply({ embeds: [embed] });
-      // }
+      if (!int.guild.members.fetch(user).moderatable) {
+        embed.setDescription(`${user.toString()} is not able to be put in timeout by the bot!`);
+        return await int.reply({ embeds: [embed] });
+      }
 
       embed.setTitle('Timeout');
-      embed.setDescription(`You have been put in timeout from ${int.guild.name} until <t${Date.now() + (time * 60 * 1000)}> for ${reason}!`);
+      embed.setDescription(`You have been put in timeout from ${int.guild.name} until <t:${Date.now() + (time * 60 * 1000)}> for ${reason}!`);
       await user.createDM();
       await user.send({ embeds: [ embed ] });
       const member = await int.guild.members.fetch(user);

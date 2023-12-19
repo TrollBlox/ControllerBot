@@ -7,7 +7,8 @@ module.exports = {
     const ticket = new ButtonBuilder()
       .setCustomId('createTicket')
       .setLabel('New Ticket')
-      .setStyle(ButtonStyle.Success);
+      .setStyle(ButtonStyle.Success)
+      .setEmoji('1033233510342852629');
     const row = new ActionRowBuilder()
       .addComponents(ticket);
     const embed = new EmbedBuilder()

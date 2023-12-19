@@ -7,11 +7,13 @@ module.exports = {
     const ticket = new ButtonBuilder()
       .setCustomId('createverify')
       .setLabel('Click me to verify!')
-      .setStyle(ButtonStyle.Success);
+      .setStyle(ButtonStyle.Success)
+      .setEmoji('1033232941783994418');
     const rules = new ButtonBuilder()
       .setCustomId('rules')
       .setLabel('Click me to read the rules!')
-      .setStyle(ButtonStyle.Secondary);
+      .setStyle(ButtonStyle.Secondary)
+      .setEmoji('1033227491957022831');
     const row = new ActionRowBuilder()
       .addComponents(ticket, rules);
     const embed = new EmbedBuilder()

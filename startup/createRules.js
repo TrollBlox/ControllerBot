@@ -8,17 +8,13 @@ module.exports = {
       .setCustomId('rules')
       .setLabel('Rules')
       .setStyle(ButtonStyle.Success)
-      .setEmoji('1007191139696255017');
+      .setEmoji('1033227491957022831');
     const roles = new ButtonBuilder()
-      .setCustomId('colors')
-      .setLabel('Colors')
-      .setStyle(ButtonStyle.Primary);
-    const gender = new ButtonBuilder()
-      .setCustomId('gender')
-      .setLabel('Gender')
+      .setCustomId('roles')
+      .setLabel('Roles')
       .setStyle(ButtonStyle.Primary);
     const row = new ActionRowBuilder()
-      .addComponents(rules, roles, gender);
+      .addComponents(rules, roles);
     const embed = new EmbedBuilder()
       .setTitle('Welcome!')
       .setDescription('Things to do around here:\n\nRead the rules\n\nGet roles')
