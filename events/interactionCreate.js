@@ -5,12 +5,12 @@ module.exports = {
   async execute(int) {
     if (int.user == int.client.user) return;
     if (skips.includes(int.customId)) {
-      await int.reply('stuff');
+      await int.reply({ content: "hi", ephemeral: true});
       return await int.deleteReply();
     }
     if (int.isButton()) {
       const button = int.client.buttons.get(int.customId);
-
+      // console.log(int.client.buttons)
       try {
         return await button.execute(int);
       } catch (error) {
